@@ -3,19 +3,21 @@
 # Push után Woodpecker automatikusan buildel és deployol.
 
 steps:
-  build:
+  - name: build
     image: node:22-alpine
     commands:
       - npm ci
       - npm run build
 
-  deploy:
+  - name: deploy
     image: alpine
-    volumes:
-      - /opt/dest_html:/var/www/pages
     commands:
-      - mkdir -p /var/www/pages/$CI_REPO_OWNER
-      - rm -rf /var/www/pages/$CI_REPO_OWNER/*
-      - cp -r dist/. /var/www/pages/$CI_REPO_OWNER/
+      # CI_REPO_OWNER = a tanuló GitHub felhasználóneve
+      - apk add curl
+      - tar -cz -C dist . | curl -f -X POST http://deploy-api:3000/deploy/$CI_REPO_OWNER
+          -H "x-deploy-secret: $DEPLOY_SECRET"
+          -H "Content-Type: application/octet-stream"
+          --data-binary @-
+    secrets: valami_hosszu_titkos_string
     when:
       branch: main
