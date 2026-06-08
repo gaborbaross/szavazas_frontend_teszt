@@ -15,9 +15,6 @@ steps:
 
   deploy:
     image: alpine
-    environment:
-      DEPLOY_SECRET:
-        from_secret: deploy_secret
     commands:
       - apk add --no-cache curl tar
       - |
