@@ -1,6 +1,4 @@
 # .woodpecker.yml
-# Ezt a fájlt a tanuló a React projekt gyökerébe teszi.
-# Push után Woodpecker automatikusan buildel és deployol.
 
 when:
   event: [push, manual]
@@ -13,14 +11,15 @@ workspace:
 steps:
   build:
     image: node:22-alpine
-    environment:
-      VITE_BASE_PATH: frontend/$CI_REPO_OWNER
     commands:
       - npm ci
-      - npm run build
+      - VITE_BASE_PATH=frontend/$CI_REPO_OWNER npm run build
 
   deploy:
     image: alpine
+    environment:
+      DEPLOY_SECRET:
+        from_secret: deploy_secret
     commands:
       - apk add --no-cache curl tar
       - |
