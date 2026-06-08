@@ -17,13 +17,9 @@ steps:
 
   deploy:
     image: alpine
-    environment:
-      DEPLOY_SECRET:
-        from_secret: deploy_secret
     commands:
       - apk add --no-cache curl tar
       - |
         tar -cz -C dist . | curl -f -X POST "http://deploy-api:3000/deploy/$CI_REPO_OWNER" \
-          -H "x-deploy-secret: $DEPLOY_SECRET" \
           -H "Content-Type: application/octet-stream" \
           --data-binary @-
