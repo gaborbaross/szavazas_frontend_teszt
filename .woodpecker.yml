@@ -13,6 +13,8 @@ workspace:
 steps:
   build:
     image: node:22-alpine
+    environment:
+      VITE_BASE_PATH: frontend/$CI_REPO_OWNER
     commands:
       - npm ci
       - npm run build
