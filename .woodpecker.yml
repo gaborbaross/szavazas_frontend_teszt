@@ -3,18 +3,17 @@
 # Push után Woodpecker automatikusan buildel és deployol.
 
 steps:
-  - name: build
+  build:
     image: node:22-alpine
     commands:
       - npm ci
       - npm run build
 
-  - name: deploy
+  deploy:
     image: alpine
     volumes:
       - /opt/dest_html:/var/www/pages
     commands:
-      # CI_REPO_OWNER = a tanuló GitHub felhasználóneve
       - mkdir -p /var/www/pages/$CI_REPO_OWNER
       - rm -rf /var/www/pages/$CI_REPO_OWNER/*
       - cp -r dist/. /var/www/pages/$CI_REPO_OWNER/
