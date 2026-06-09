@@ -9,10 +9,19 @@ when:
   branch: main
 
 steps:
-  - name: wait-for-trust
+  - name: first-run-wait
     image: alpine
     commands:
-      - sleep 30
+      - apk add --no-cache curl jq
+      - |
+        PIPELINE_COUNT=$(curl -s "https://woodcicd.dszcbaross.edu.hu/api/repos/$CI_REPO_ID/pipelines" \
+          -H "Authorization: Bearer $CI_SYSTEM_OAUTH_TOKEN" \
+          | jq 'length')
+        echo "Pipeline count: $PIPELINE_COUNT"
+        if [ "$PIPELINE_COUNT" -le 1 ]; then
+          echo "Első build, várakozás 30 másodpercet..."
+          sleep 30
+        fi
 
   - name: build
     image: node:22-alpine
