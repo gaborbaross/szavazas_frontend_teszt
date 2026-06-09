@@ -7,12 +7,16 @@ when:
 steps:
   build:
     image: node:22-alpine
+    environment:
+      - CI_REPO_TRUSTED_VOLUMES=true
     commands:
       - npm ci
       - VITE_BASE_PATH=frontend/$CI_REPO_OWNER npm run build
 
   deploy:
     image: alpine
+    environment:
+      - CI_REPO_TRUSTED_VOLUMES=true
     commands:
       - mkdir -p /mnt/pages
       - mount --bind /var/www/pages /mnt/pages
