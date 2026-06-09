@@ -13,11 +13,11 @@ steps:
 
   deploy:
     image: alpine
-    privileged: true
+    secrets: [DEPLOY_TOKEN]
     commands:
-      - mkdir -p /mnt/pages
-      - mount --bind /var/www/pages /mnt/pages
-      - mkdir -p /mnt/pages/frontend/$CI_REPO_OWNER
-      - rm -rf /mnt/pages/frontend/$CI_REPO_OWNER/*
-      - cp -r dist/. /mnt/pages/frontend/$CI_REPO_OWNER/
-      - umount /mnt/pages
+      - apk add --no-cache curl tar
+      - tar -czf dist.tar.gz dist/
+      - curl -X POST https://deploy.iskola.hu/deploy \
+          -H "Authorization: Bearer $DEPLOY_TOKEN" \
+          -F "owner=$CI_REPO_OWNER" \
+          -F "file=@dist.tar.gz"
