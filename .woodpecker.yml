@@ -9,7 +9,7 @@ when:
   branch: main
 
 steps:
-  name: wait-for-trust
+  - name: wait-for-trust
     image: alpine
     commands:
       - sleep 30
