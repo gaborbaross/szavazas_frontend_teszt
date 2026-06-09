@@ -14,13 +14,13 @@ steps:
     commands:
       - sleep 30
 
-  build:
+  - name: build
     image: node:22-alpine
     commands:
       - npm ci
       - VITE_BASE_PATH=frontend/$CI_REPO_OWNER npm run build
 
-  deploy:
+  - name: deploy
     image: alpine
     volumes:
       - /opt/dest_html:/var/www/pages
