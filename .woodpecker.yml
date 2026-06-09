@@ -12,15 +12,12 @@ steps:
   - name: first-run-wait
     image: alpine
     commands:
-      - apk add --no-cache curl jq
       - |
-        PIPELINE_COUNT=$(curl -s "https://woodcicd.dszcbaross.edu.hu/api/repos/$CI_REPO_ID/pipelines" \
-          -H "Authorization: Bearer $CI_SYSTEM_OAUTH_TOKEN" \
-          | jq 'length')
-        echo "Pipeline count: $PIPELINE_COUNT"
-        if [ "$PIPELINE_COUNT" -le 1 ]; then
+        if [ "$CI_PIPELINE_NUMBER" = "1" ]; then
           echo "Első build, várakozás 30 másodpercet..."
           sleep 30
+        else
+          echo "Nem az első build, folytatás..."
         fi
 
   - name: build
