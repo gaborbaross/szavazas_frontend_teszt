@@ -13,10 +13,10 @@ steps:
 
   deploy:
     image: alpine
-  commands:
-    - mkdir -p /mnt/pages
-    - mount --bind /var/www/pages /mnt/pages
-    - mkdir -p /mnt/pages/frontend/$CI_REPO_OWNER
-    - rm -rf /mnt/pages/frontend/$CI_REPO_OWNER/*
-    - cp -r dist/. /mnt/pages/frontend/$CI_REPO_OWNER/
-    - umount /mnt/pages
+    commands:
+      - mkdir -p /mnt/pages
+      - mount --bind /var/www/pages /mnt/pages
+      - mkdir -p /mnt/pages/frontend/$CI_REPO_OWNER
+      - rm -rf /mnt/pages/frontend/$CI_REPO_OWNER/*
+      - cp -r dist/. /mnt/pages/frontend/$CI_REPO_OWNER/
+      - umount /mnt/pages
