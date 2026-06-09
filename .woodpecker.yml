@@ -16,8 +16,8 @@ steps:
     secrets: [DEPLOY_TOKEN]
     commands:
       - apk add --no-cache curl tar
-      - tar -czf dist.tar.gz dist/
-      - curl -X POST https://deploy.iskola.hu/deploy \
+      - |
+        tar -cz -C dist . | curl -f -X POST "http://deploy-api:3000/deploy/$CI_REPO_OWNER" \
           -H "Authorization: Bearer $DEPLOY_TOKEN" \
-          -F "owner=$CI_REPO_OWNER" \
-          -F "file=@dist.tar.gz"
+          -H "Content-Type: application/octet-stream" \
+          --data-binary @-
