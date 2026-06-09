@@ -1,10 +1,19 @@
 # .woodpecker.yml
+# Ezt a fájlt a tanuló a React projekt gyökerébe teszi.
+# Push után a Woodpecker automatikusan buildel és deployol.
+# Az elején vár 30 mp-et, hogy az auto-trust script elvégezze a módosítást a repo-n
+# CI_REPO_OWNER = a tanuló GitHub felhasználóneve
 
 when:
   event: [push, manual]
   branch: main
 
 steps:
+  name: wait-for-trust
+    image: alpine
+    commands:
+      - sleep 30
+
   build:
     image: node:22-alpine
     commands:
@@ -15,8 +24,7 @@ steps:
     image: alpine
     volumes:
       - /opt/dest_html:/var/www/pages
-    commands:
-      # CI_REPO_OWNER = a tanuló GitHub felhasználóneve
+    commands:      
       - mkdir -p /var/www/pages/$CI_REPO_OWNER
       - rm -rf /var/www/pages/$CI_REPO_OWNER/*
       - cp -r dist/. /var/www/pages/$CI_REPO_OWNER/
